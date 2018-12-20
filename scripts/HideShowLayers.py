@@ -8,7 +8,7 @@ hideLayers = arcpy.GetParameterAsText(1).split("|")
 showLayers = arcpy.GetParameterAsText(2).split("|")
 # Save the output in a different filename (same folder) - pass as string in parameter 3;
 # if not set, will overwrite the original file
-saveAs = arcpyGetParameterAsText(3)
+saveAs = arcpy.GetParameterAsText(3)
 
 # Open map document
 mxd = arcpy.mapping.MapDocument(file)

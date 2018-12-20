@@ -24,6 +24,6 @@ for lyr in arcpy.mapping.ListLayers(mxd):
 
 # Save the map document
 if saveAs:
-	mxd.saveACopy(saveAs)
+	mxd.saveACopy(saveAs if saveAs.endswith(".mxd") else saveAs + ".mxd")
 else:
 	mxd.save()

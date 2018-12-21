@@ -14,18 +14,25 @@ saveAs = re.sub(r'[\\/:"*?<>|]+', "", arcpy.GetParameterAsText(3))
 # Open map document
 mxd = arcpy.mapping.MapDocument(file)
 
-# Loop through all layers
-for lyr in arcpy.mapping.ListLayers(mxd):
-	# Hide layer if part of show list
-	if lyr.name in hideLayers:
-		arcpy.AddMessage("Hiding layer: " + lyr.name)
-		lyr.visible = False
-	# Show layer if part of hide list
-	elif lyr.name in showLayers:
-		lyr.visible = True
-		arcpy.AddMessage("Showing layer: " + lyr.name)
-	else:
-		arcpy.AddMessage("Ignoring layer: " + lyr.name)
+# Remove items in showLayers from hideLayers
+for item in showLayers:
+	while hideLayers.count(item) > 0:
+		hideLayers.remove(item)
+
+# Loop through all dataframes
+for df in arcpy.mapping.ListDataFrames(mxd):
+	# Loop through all layers
+	for lyr in arcpy.mapping.ListLayers(mxd, "", df):
+		# Remove layer if part of hide list
+		if lyr.name in hideLayers:
+			arcpy.AddMessage("Removing layer: " + lyr.name)
+			arcpy.mapping.RemoveLayer(df, lyr)
+		# Show layer if part of show list
+		elif lyr.name in showLayers:
+			lyr.visible = True
+			arcpy.AddMessage("Showing layer: " + lyr.name)
+		else:
+			arcpy.AddMessage("Ignoring layer: " + lyr.name)
 
 # Save the map document
 if saveAs:

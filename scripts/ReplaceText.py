@@ -14,7 +14,7 @@ mxd = arcpy.mapping.MapDocument(file)
 # Update all text elements
 for elm in arcpy.mapping.ListLayoutElements(mxd, "TEXT_ELEMENT"):
 	if textToReplace in elm.text:
-		if not textToReplaceWith:
+		if textToReplace == elm.text and not textToReplaceWith:
 			elm.delete()
 		else:
 			elm.text = elm.text.replace(textToReplace, textToReplaceWith)

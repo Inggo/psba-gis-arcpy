@@ -11,6 +11,17 @@ showLayers = arcpy.GetParameterAsText(2).split("|")
 # if not set, will overwrite the original file
 saveAs = re.sub(r'[\\/:"*?<>|]+', "", arcpy.GetParameterAsText(3))
 
+# Add text replacement parameters
+i = 3
+replaceText = []
+replaceTextWith = []
+
+while x < arcpy.GetArgumentCount():
+    replaceText.append(arcpy.GetParameterAsText(x))
+    x += 1
+    replaceTextWidth.append(arcpy.GetParameterAsText(x))
+    x += 1
+
 # Open map document
 mxd = arcpy.mapping.MapDocument(file)
 
@@ -34,10 +45,23 @@ for df in arcpy.mapping.ListDataFrames(mxd):
 		else:
 			arcpy.AddMessage("Ignoring layer: " + lyr.name)
 
+# Update all text elements
+for elm in arcpy.mapping.ListLayoutElements(mxd, "TEXT_ELEMENT"):
+    for i, textToReplace in enumerate(replaceText)
+        if textToReplace in elm.text:
+            if textToReplace == elm.text and not replaceTextWith[i]:
+                # Delete text element if the replacement is blank
+                elm.delete()
+            else:
+                # Otherwise, just replace the contents
+                elm.text = elm.text.replace(textToReplace, replaceTextWith[i])
+
 # Save the map document
 if saveAs:
+    # As a copy if provided
 	mxd.saveACopy(saveAs if saveAs.endswith(".mxd") else saveAs + ".mxd")
 else:
+    # Or save by itself if not provided
 	mxd.save()
 
 del mxd
